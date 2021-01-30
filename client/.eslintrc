@@ -1,0 +1,15 @@
+{
+  "extends": ["plugin:import/errors", "plugin:import/warnings", "airbnb", "prettier"],
+  "rules": {
+    "react/jsx-filename-extension": [0, { "allow": "as-needed" }],
+    "import/prefer-default-export": "off",
+    "no-unused-vars": "warn"
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "moduleDirectory": ["node_modules", "src/"]
+      }
+    }
+  }
+}

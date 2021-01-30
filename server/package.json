@@ -1,0 +1,46 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon start.js",
+    "test": "jest --watch --detectOpenHandles --runInBand",
+    "test:nw": "jest --runInBand --detectOpenHandles",
+    "test:cy": "nodemon start.js"
+  },
+  "devDependencies": {
+    "@shelf/jest-mongodb": "^1.2.1",
+    "babel-plugin-module-resolver": "^4.0.0",
+    "eslint": "^7.4.0",
+    "eslint-config-google": "^0.14.0",
+    "husky": "^4.3.0",
+    "jest": "^26.0.1",
+    "lint-staged": "^10.4.0",
+    "nodemon": "^2.0.4"
+  },
+  "dependencies": {
+    "@babel/core": "^7.10.3",
+    "@babel/plugin-transform-async-to-generator": "^7.10.4",
+    "@babel/polyfill": "^7.11.5",
+    "@babel/preset-env": "^7.10.3",
+    "@babel/register": "^7.10.3",
+    "axios": "^0.20.0",
+    "babel-core": "^6.26.3",
+    "babel-jest": "^26.0.1",
+    "babel-plugin-module-resolver": "^4.0.0",
+    "babel-polyfill": "^6.26.0",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "firebase": "^7.15.5",
+    "firebase-admin": "^8.13.0",
+    "google-auth-library": "^6.0.5",
+    "mongodb": "^3.5.9",
+    "mongoose": "^5.9.24",
+    "socket.io": "^3.1.0",
+    "supertest": "^4.0.2",
+    "uuid": "^8.3.1"
+  }
+}
