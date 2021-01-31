@@ -1,5 +1,6 @@
 // JOIN - sprawdza czy ktoś już stworzył pokój czy nie, po czym tworzy lub dołacza do zmiennej,
 // sprawdza także czy dany pokój nie jest już zajęty przez 2 graczy
+// wychodzenie graczy i usuwanie ich z bazy
 
 // MOVE - ruch gracza i przesyła go do przeciwnika
 
@@ -34,6 +35,10 @@ const mainSocket = (io) => {
         console.log(username);
         io.sockets.in(id).emit('joinOpponent', resoultDataFormat);
       }
+    });
+
+    socket.on('move', ({id, move, board}) => {
+      socket.to(id).emit('moveOpponent', {move, board});
     });
   });
 };

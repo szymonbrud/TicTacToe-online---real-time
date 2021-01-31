@@ -48,6 +48,9 @@ export const Field = styled.div`
   border-radius: 5px;
   border: 4px solid ${({ theme }) => theme.colors.darkBlue};
   background: ${({ theme }) => theme.colors.lightBlue};
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
 `;
 
@@ -67,4 +70,8 @@ export const WaitForOpponentWrapper = styled.div`
   justify-content: center;
 
   font-size: 24px;
+`;
+
+export const FieldSymbolImage = styled.img`
+  width: 30px;
 `;

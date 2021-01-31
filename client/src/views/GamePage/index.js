@@ -12,13 +12,14 @@ import {
   BoardWrapper,
   Field,
   WaitForOpponentWrapper,
+  FieldSymbolImage,
 } from './styled';
 
 import useHooks from './useHooks';
 
 const GamePage = () => {
   const { id, username } = useParams();
-  const { board, isGameStart, players } = useHooks(id, username);
+  const { board, isGameStart, players, move, playerMove, boardRef } = useHooks(id, username);
 
   return (
     <>
@@ -27,23 +28,21 @@ const GamePage = () => {
       </WaitForOpponentWrapper>
       <PlayersWrapper>
         {players.map((player, pIndex) => (
-          <PlayerInsideWrapper isMove>
+          <PlayerInsideWrapper isMove={player.symbol === move}>
             <PlayerIcon src={player.symbol ? ElipseIcon : xIcon} />
             <PlayerName>{player.playerName}</PlayerName>
           </PlayerInsideWrapper>
         ))}
-        {/* <PlayerInsideWrapper isMove>
-          <PlayerIcon src={xIcon} />
-          <PlayerName>małyszowki</PlayerName>
-        </PlayerInsideWrapper>
-        <PlayerInsideWrapper>
-          <PlayerIcon src={ElipseIcon} />
-          <PlayerName>kubawczyk</PlayerName>
-        </PlayerInsideWrapper> */}
       </PlayersWrapper>
-      <BoardWrapper>
-        {board.map(field => (
-          <Field>{/* // */}</Field>
+      <BoardWrapper ref={boardRef}>
+        {board.map((field, fieldIndex) => (
+          <Field onClick={() => playerMove(fieldIndex)}>
+            {field !== 0 && field === 1 ? (
+              <FieldSymbolImage src={xIcon} alt="x" />
+            ) : (
+              field === 2 && <FieldSymbolImage src={ElipseIcon} alt="o" />
+            )}
+          </Field>
         ))}
       </BoardWrapper>
     </>
