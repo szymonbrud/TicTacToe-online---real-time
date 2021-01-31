@@ -13,24 +13,51 @@ import {
   Field,
   WaitForOpponentWrapper,
   FieldSymbolImage,
+  RematchButton,
+  RematchText,
+  RematchWrapper,
+  RematchPlayerName,
 } from './styled';
 
 import useHooks from './useHooks';
 
 const GamePage = () => {
   const { id, username } = useParams();
-  const { board, isGameStart, players, move, playerMove, boardRef } = useHooks(id, username);
+  const {
+    board,
+    isGameStart,
+    players,
+    move,
+    playerMove,
+    boardRef,
+    showRematch,
+    acceptRematch,
+    playersAcceptedRematch,
+  } = useHooks(id, username);
 
   return (
     <>
       <WaitForOpponentWrapper isGameStart={isGameStart}>
         Czekanie na przeciwnika
       </WaitForOpponentWrapper>
+      {showRematch && (
+        <RematchWrapper>
+          <RematchText>REMATCH?</RematchText>
+          {players.map(e => (
+            <RematchPlayerName>
+              {`${e.playerName.username}: ${
+                playersAcceptedRematch.includes(e.playerName.userId) ? 'accepted' : 'wait'
+              }`}
+            </RematchPlayerName>
+          ))}
+          <RematchButton onClick={acceptRematch}>rematch</RematchButton>
+        </RematchWrapper>
+      )}
       <PlayersWrapper>
-        {players.map((player, pIndex) => (
-          <PlayerInsideWrapper isMove={player.symbol === move}>
+        {players.map(player => (
+          <PlayerInsideWrapper isMove={player.symbol === move} isMe={player.isMe}>
             <PlayerIcon src={player.symbol ? ElipseIcon : xIcon} />
-            <PlayerName>{player.playerName}</PlayerName>
+            <PlayerName>{player.playerName.username}</PlayerName>
           </PlayerInsideWrapper>
         ))}
       </PlayersWrapper>

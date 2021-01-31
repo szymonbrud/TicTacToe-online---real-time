@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 
 let socket;
 
@@ -32,8 +32,8 @@ const useHooks = (id, username) => {
   const [move, setMove] = useState(elipse);
   const [players, setPlayers] = useState([]);
   const [isGameStart, setIsGameStart] = useState(false);
-
-  const boardRef = useRef();
+  const [showRematch, setShowRematch] = useState(true);
+  const [playersAcceptedRematch, setPlayersAcceptedRematch] = useState([]);
 
   const createTheBoard = () => {
     const boardGen = [];
@@ -46,19 +46,31 @@ const useHooks = (id, username) => {
   };
 
   const setSettings = gameSettings => {
-    const indexOfMyNickname = gameSettings.findIndex(element => element.playerName === username);
+    console.log(gameSettings);
+
+    const indexOfMyPlayer = gameSettings.findIndex(
+      element => element.playerName.userId === socket.id,
+    );
     const gameSettingsEditFormat = gameSettings;
-    gameSettingsEditFormat[indexOfMyNickname].isMe = true;
+    gameSettingsEditFormat[indexOfMyPlayer].isMe = true;
 
     setPlayers(gameSettingsEditFormat);
     setIsGameStart(true);
   };
 
-  const checkWin = () => {
+  const checkWin = futureBoard => {
     let win = false;
 
-    const xBoard = board.map(e => (e === 1 ? 0 : e));
-    const elipseBoard = board.map(e => (e === 2 ? 0 : e));
+    let xBoard;
+    let elipseBoard;
+
+    if (futureBoard) {
+      xBoard = futureBoard.map(e => (e === 1 ? 0 : e));
+      elipseBoard = futureBoard.map(e => (e === 2 ? 0 : e));
+    } else {
+      xBoard = board.map(e => (e === 1 ? 0 : e));
+      elipseBoard = board.map(e => (e === 2 ? 0 : e));
+    }
 
     winCombination.forEach(winComb => {
       const equals = (a, b) => JSON.stringify(a) === JSON.stringify(b);
@@ -72,10 +84,10 @@ const useHooks = (id, username) => {
       }
     });
 
-    console.log(win);
-
     if (win) {
-      alert('WIN');
+      setTimeout(() => {
+        alert('WIN');
+      }, 300);
     }
   };
 
@@ -102,6 +114,17 @@ const useHooks = (id, username) => {
     }
   };
 
+  const acceptRematch = () => {
+    socket.emit('acceptRematch', { roomId: id });
+    // console.log(playersAcceptedRematch);
+    // if (playersAcceptedRematch.length === 1) {
+    //   setBoard([0, 0, 0, 0, 0, 0, 0, 0, 0]);
+    //   setShowRematch(false);
+    //   setIsGameStart(true);
+    // }
+    // setPlayersAcceptedRematch(prev => [...prev, socket.id]);
+  };
+
   useEffect(() => {
     createTheBoard();
     socket = io('http://localhost:5000');
@@ -115,9 +138,27 @@ const useHooks = (id, username) => {
     });
 
     socket.on('moveOpponent', data => {
+      console.log(data);
+
       setMove(data.move);
       setBoard(data.board);
-      checkWin();
+
+      checkWin(data.board);
+    });
+
+    socket.on('playerLeave', () => {
+      console.log('player leave');
+      setIsGameStart(false);
+    });
+
+    socket.on('opponentAcceptRematch', ({ isBoth, playerId }) => {
+      if (isBoth) {
+        setBoard([0, 0, 0, 0, 0, 0, 0, 0, 0]);
+        setShowRematch(false);
+        setIsGameStart(true);
+      } else {
+        setPlayersAcceptedRematch(prev => [...prev, playerId]);
+      }
     });
   }, []);
 
@@ -127,6 +168,9 @@ const useHooks = (id, username) => {
     players,
     move,
     playerMove,
+    showRematch,
+    acceptRematch,
+    playersAcceptedRematch,
   };
 };
 
