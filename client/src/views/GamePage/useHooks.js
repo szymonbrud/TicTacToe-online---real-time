@@ -1,14 +1,18 @@
 import io from 'socket.io-client';
 import { useEffect, useState } from 'react';
 
+const API = 'http://localhost:5000';
+
 let socket;
 
 const fieldTypeBoard = [0, 1, 2];
-const [emptyField, xField, circleField] = fieldTypeBoard;
+const [emptyField] = fieldTypeBoard;
 const symbolType = [0, 1];
-const [x, elipse] = symbolType;
+const [, elipse] = symbolType;
 
-const winCombination = [
+const clearBoard = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+const winBoardCombination = [
   [1, 1, 1, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 1, 1, 1, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 1, 1, 1],
@@ -27,40 +31,22 @@ const winCombination = [
   [0, 0, 2, 0, 2, 0, 2, 0, 0],
 ];
 
-const useHooks = (id, username) => {
+const useHooks = (roomId, username) => {
   const [board, setBoard] = useState([]);
   const [move, setMove] = useState(elipse);
   const [players, setPlayers] = useState([]);
   const [isGameStart, setIsGameStart] = useState(false);
-  const [showRematch, setShowRematch] = useState(true);
-  const [playersAcceptedRematch, setPlayersAcceptedRematch] = useState([]);
+  const [revenge, setRevenge] = useState({ showRevenge: true, users: [] });
 
   const createTheBoard = () => {
     const boardGen = [];
-
     for (let i = 0; i < 9; i += 1) {
       boardGen.push(emptyField);
     }
-
     setBoard(boardGen);
   };
 
-  const setSettings = gameSettings => {
-    console.log(gameSettings);
-
-    const indexOfMyPlayer = gameSettings.findIndex(
-      element => element.playerName.userId === socket.id,
-    );
-    const gameSettingsEditFormat = gameSettings;
-    gameSettingsEditFormat[indexOfMyPlayer].isMe = true;
-
-    setPlayers(gameSettingsEditFormat);
-    setIsGameStart(true);
-  };
-
   const checkWin = futureBoard => {
-    let win = false;
-
     let xBoard;
     let elipseBoard;
 
@@ -72,14 +58,12 @@ const useHooks = (id, username) => {
       elipseBoard = board.map(e => (e === 2 ? 0 : e));
     }
 
-    winCombination.forEach(winComb => {
+    let win = false;
+
+    winBoardCombination.forEach(winComb => {
       const equals = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
-      if (equals(winComb, xBoard)) {
-        win = true;
-      }
-
-      if (equals(winComb, elipseBoard)) {
+      if (equals(winComb, xBoard) || equals(winComb, elipseBoard)) {
         win = true;
       }
     });
@@ -91,74 +75,83 @@ const useHooks = (id, username) => {
     }
   };
 
+  const prepareGame = gameSettings => {
+    const indexOfMyPlayer = gameSettings.findIndex(element => element.userId === socket.id);
+    const gameSettingsEditFormat = gameSettings;
+    gameSettingsEditFormat[indexOfMyPlayer].isMe = true;
+
+    setPlayers(gameSettingsEditFormat);
+    setBoard(clearBoard);
+    setRevenge({ showRevenge: false, users: [] });
+    setIsGameStart(true);
+  };
+
   const playerMove = fieldIndex => {
     const findMyPlayerSettings = players.find(element => element.isMe);
     if (findMyPlayerSettings.symbol === move) {
-      const sendMove = move === 0 ? 1 : 0;
-      const sendBoard = board;
-      sendBoard[fieldIndex] = move + 1;
+      const currentMove = move === 0 ? 1 : 0;
+      const currentBoard = board;
+      if (currentBoard[fieldIndex] === 0) {
+        currentBoard[fieldIndex] = move + 1;
 
-      socket.emit('move', { move: sendMove, board: sendBoard, id });
+        socket.emit('move', { move: currentMove, board: currentBoard, roomId });
 
-      setBoard(prev => {
-        const prevEdit = prev;
-        prevEdit[fieldIndex] = move + 1;
-        return prevEdit;
-      });
-      setMove(prev => (prev === 0 ? 1 : 0));
+        setBoard(currentBoard);
+        setMove(currentMove);
 
-      checkWin();
-      // żądanie
+        checkWin();
+      }
     } else {
       alert('to nie jest twój ruch');
     }
   };
 
-  const acceptRematch = () => {
-    socket.emit('acceptRematch', { roomId: id });
-    // console.log(playersAcceptedRematch);
-    // if (playersAcceptedRematch.length === 1) {
-    //   setBoard([0, 0, 0, 0, 0, 0, 0, 0, 0]);
-    //   setShowRematch(false);
-    //   setIsGameStart(true);
-    // }
-    // setPlayersAcceptedRematch(prev => [...prev, socket.id]);
+  const preprocessingRevenge = revengesData => {
+    if (revengesData.users.length === 2) {
+      setRevenge({
+        showRevenge: true,
+        users: [...revengesData.users],
+      });
+      socket.emit('getGameSettings', { roomId });
+    } else {
+      setRevenge({
+        showRevenge: true,
+        users: [...revengesData.users],
+      });
+    }
+  };
+
+  const acceptRevenge = () => {
+    socket.emit('revenges', { roomId });
   };
 
   useEffect(() => {
+    socket = io(API);
+
+    socket.on('prepareGame', gameSettings => {
+      prepareGame(gameSettings);
+    });
+
+    socket.on('moveOpponent', ({ move: movePlayer, board: boardPlayer }) => {
+      setMove(movePlayer);
+      setBoard(boardPlayer);
+      checkWin(boardPlayer);
+    });
+
+    socket.on('revengesAcceped', revengesData => {
+      preprocessingRevenge(revengesData);
+    });
+  }, []);
+
+  useEffect(() => {
     createTheBoard();
-    socket = io('http://localhost:5000');
-    socket.emit('join', { id, username }, () => {
-      console.log('response');
-    });
-
-    socket.on('joinOpponent', data => {
-      console.log('join');
-      setSettings(data);
-    });
-
-    socket.on('moveOpponent', data => {
-      console.log(data);
-
-      setMove(data.move);
-      setBoard(data.board);
-
-      checkWin(data.board);
+    socket.emit('join', { roomId, username }, res => {
+      // TODO: jeżęli res error to wyświetlić error
     });
 
     socket.on('playerLeave', () => {
       console.log('player leave');
       setIsGameStart(false);
-    });
-
-    socket.on('opponentAcceptRematch', ({ isBoth, playerId }) => {
-      if (isBoth) {
-        setBoard([0, 0, 0, 0, 0, 0, 0, 0, 0]);
-        setShowRematch(false);
-        setIsGameStart(true);
-      } else {
-        setPlayersAcceptedRematch(prev => [...prev, playerId]);
-      }
     });
   }, []);
 
@@ -168,9 +161,8 @@ const useHooks = (id, username) => {
     players,
     move,
     playerMove,
-    showRematch,
-    acceptRematch,
-    playersAcceptedRematch,
+    acceptRevenge,
+    revenge,
   };
 };
 

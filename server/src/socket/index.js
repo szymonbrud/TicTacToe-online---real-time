@@ -1,51 +1,38 @@
-// JOIN - sprawdza czy ktoś już stworzył pokój czy nie, po czym tworzy lub dołacza do zmiennej,
-// sprawdza także czy dany pokój nie jest już zajęty przez 2 graczy
-// wychodzenie graczy i usuwanie ich z bazy
-
-// MOVE - ruch gracza i przesyła go do przeciwnika
-
-import {joinRoom, removePlayer, rematchAccept} from './users';
+import {joinRoom, removePlayer, revengesAccept, prepareRoomSettings} from './users';
 
 const mainSocket = (io) => {
   io.on('connect', (socket) => {
-    socket.on('join', ({id, username}, callback) => {
-      const resoult = joinRoom(id, username, socket.id);
+    socket.on('join', ({roomId, username}, callback) => {
+      const resoult = joinRoom(roomId, username, socket.id);
 
       if (resoult.error) {
-        callback({error: true});
+        callback({error: true, desc: resoult.desc});
         return;
       }
 
-      socket.join(id);
+      socket.join(roomId);
 
       if (resoult.users.length === 2) {
-        const randomNumber = Math.round(Math.random() * (1 - 0)) + 0;
+        const roomSettings = prepareRoomSettings(roomId);
 
-        const resoultDataFormat = [
-          {
-            playerName: resoult.users[0],
-            symbol: randomNumber,
-          },
-          {
-            playerName: resoult.users[1],
-            symbol: randomNumber === 0 ? 1 : 0,
-          },
-        ];
-
-        io.sockets.in(id).emit('joinOpponent', resoultDataFormat);
+        io.sockets.in(roomId).emit('prepareGame', roomSettings);
       }
     });
 
-    socket.on('move', ({id, move, board}) => {
-      socket.to(id).emit('moveOpponent', {move, board});
+    socket.on('move', ({roomId, move, board}) => {
+      socket.to(roomId).emit('moveOpponent', {move, board});
     });
 
-    socket.on('acceptRematch', ({roomId}) => {
-      const isBothPlayersAcceped = rematchAccept(roomId, socket.id);
-      console.log(isBothPlayersAcceped);
-      io.sockets
-        .in(roomId)
-        .emit('opponentAcceptRematch', {isBoth: isBothPlayersAcceped, playerId: socket.id});
+    socket.on('revenges', ({roomId}) => {
+      const revengesCurrentRoom = revengesAccept(roomId, socket.id);
+
+      io.sockets.in(roomId).emit('revengesAcceped', revengesCurrentRoom);
+    });
+
+    socket.on('getGameSettings', ({roomId}) => {
+      const roomSettings = prepareRoomSettings(roomId);
+
+      io.sockets.in(roomId).emit('prepareGame', roomSettings);
     });
 
     socket.on('disconnect', (data) => {

@@ -1,4 +1,3 @@
-
 --- CURRENT:
 TODO: sprawdzenie i wypisanie aktualnie działających i niedziałających funkcji 
 TODO: code review oraz naprawienie bugów

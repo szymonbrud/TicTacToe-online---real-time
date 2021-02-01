@@ -4,6 +4,8 @@ import { useParams } from 'react-router-dom';
 import xIcon from 'assets/icons/xIcon.svg';
 import ElipseIcon from 'assets/icons/ElipseIcon.svg';
 
+import InvadeButton from 'components/InvadeButton';
+
 import {
   PlayerIcon,
   PlayerInsideWrapper,
@@ -30,34 +32,32 @@ const GamePage = () => {
     move,
     playerMove,
     boardRef,
-    showRematch,
-    acceptRematch,
-    playersAcceptedRematch,
+    acceptRevenge,
+    revenge,
   } = useHooks(id, username);
 
   return (
     <>
-      <WaitForOpponentWrapper isGameStart={isGameStart}>
+      <InvadeButton />
+      {/* <WaitForOpponentWrapper isGameStart={isGameStart}>
         Czekanie na przeciwnika
       </WaitForOpponentWrapper>
-      {showRematch && (
+      {revenge.showRevenge && (
         <RematchWrapper>
           <RematchText>REMATCH?</RematchText>
           {players.map(e => (
             <RematchPlayerName>
-              {`${e.playerName.username}: ${
-                playersAcceptedRematch.includes(e.playerName.userId) ? 'accepted' : 'wait'
-              }`}
+              {`${e.username}: ${revenge.users.includes(e.userId) ? 'accepted' : 'wait'}`}
             </RematchPlayerName>
           ))}
-          <RematchButton onClick={acceptRematch}>rematch</RematchButton>
+          <RematchButton onClick={acceptRevenge}>rematch</RematchButton>
         </RematchWrapper>
       )}
       <PlayersWrapper>
         {players.map(player => (
           <PlayerInsideWrapper isMove={player.symbol === move} isMe={player.isMe}>
             <PlayerIcon src={player.symbol ? ElipseIcon : xIcon} />
-            <PlayerName>{player.playerName.username}</PlayerName>
+            <PlayerName>{player.username}</PlayerName>
           </PlayerInsideWrapper>
         ))}
       </PlayersWrapper>
@@ -71,7 +71,7 @@ const GamePage = () => {
             )}
           </Field>
         ))}
-      </BoardWrapper>
+      </BoardWrapper> */}
     </>
   );
 };
