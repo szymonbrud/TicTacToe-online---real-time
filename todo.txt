@@ -4,7 +4,6 @@ TODO: code review oraz naprawienie bugów
 
 TODO: remis
 TODO: kto wygrał
-TODO: naprawić żeby po zaczęciu nowej gry, nie było zaznaczonego pola
 
 TODO: potwierdzanie wygranej a może nawet grę nie wiem czy nie powinien przenieś na server?
 
@@ -12,3 +11,4 @@ TODO: potwierdzanie wygranej a może nawet grę nie wiem czy nie powinien przeni
 TODO: dwóch graczy o takich samych nazwach ?
 TODO: po wyjsciu kogoś gra się zatrzymuje, jest oczekiwanie na nowego gracz
 TODO: wygrane są wyświetlane, po wygraniu powienien zobaczyć ktoś kończący ruch, po czym wyskakuje ekran z wygraną, można kliknąć rewanż, bedzie na tym ekranie 2 nicki oraz będzie pokazane czy ktoś kilknął to jeśli tak to przenosi do czystej gierki
+TODO: naprawić żeby po zaczęciu nowej gry, nie było zaznaczonego pola

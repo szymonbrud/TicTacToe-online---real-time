@@ -1,3 +1,22 @@
+const winBoardCombination = [
+  [1, 1, 1, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 1, 1, 1, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 1, 1, 1],
+  [1, 0, 0, 1, 0, 0, 1, 0, 0],
+  [0, 1, 0, 0, 1, 0, 0, 1, 0],
+  [0, 0, 1, 0, 0, 1, 0, 0, 1],
+  [1, 0, 0, 0, 1, 0, 0, 0, 1],
+  [0, 0, 1, 0, 1, 0, 1, 0, 0],
+  [2, 2, 2, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 2, 2, 2, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 2, 2, 2],
+  [2, 0, 0, 2, 0, 0, 2, 0, 0],
+  [0, 2, 0, 0, 2, 0, 0, 2, 0],
+  [0, 0, 2, 0, 0, 2, 0, 0, 2],
+  [2, 0, 0, 0, 2, 0, 0, 0, 2],
+  [0, 0, 2, 0, 2, 0, 2, 0, 0],
+];
+
 const rooms = [];
 const revenges = [];
 
@@ -18,7 +37,6 @@ export const joinRoom = (roomId, username, userId) => {
   }
 };
 
-// TODO: zedytowac remove player - review
 export const removePlayer = (userId) => {
   let indexOfPlayer = -1;
   const indexOfRoomWithPlayer = rooms.findIndex((room) =>
@@ -78,4 +96,63 @@ export const prepareRoomSettings = (roomId) => {
   ];
 
   return resoultRoomSettingsFormat;
+};
+
+export const checkWin = (board, move, userId) => {
+  const winBoardCombination = [
+    [1, 1, 1, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 1, 1, 1, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 1, 1, 1],
+    [1, 0, 0, 1, 0, 0, 1, 0, 0],
+    [0, 1, 0, 0, 1, 0, 0, 1, 0],
+    [0, 0, 1, 0, 0, 1, 0, 0, 1],
+    [1, 0, 0, 0, 1, 0, 0, 0, 1],
+    [0, 0, 1, 0, 1, 0, 1, 0, 0],
+    [2, 2, 2, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 2, 2, 2, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 2, 2, 2],
+    [2, 0, 0, 2, 0, 0, 2, 0, 0],
+    [0, 2, 0, 0, 2, 0, 0, 2, 0],
+    [0, 0, 2, 0, 0, 2, 0, 0, 2],
+    [2, 0, 0, 0, 2, 0, 0, 0, 2],
+    [0, 0, 2, 0, 2, 0, 2, 0, 0],
+  ];
+
+  const winStatusArray = [0, 1, 2];
+  const [none, winStatus, drawStatus] = winStatusArray;
+
+  let win = none;
+
+  winBoardCombination.forEach((winBoard) => {
+    const xBoard = winBoard.map((e) => (e === 1 ? 0 : e));
+    const elipseBoard = winBoard.map((e) => (e === 2 ? 0 : e));
+    console.log(xBoard);
+
+    let resolutStatus = 0;
+    let numberOfFulled = 0;
+
+    board.forEach((e) => {
+      if (e !== 0) numberOfFulled = numberOfFulled + 1;
+    });
+
+    for (let mainIndex = 0; mainIndex < 9; mainIndex++) {
+      if (xBoard[mainIndex] === board[mainIndex] && xBoard[mainIndex] !== 0) {
+        resolutStatus = resolutStatus + 1;
+      }
+    }
+
+    for (let mainIndex = 0; mainIndex < 9; mainIndex++) {
+      if (elipseBoard[mainIndex] === board[mainIndex] && elipseBoard[mainIndex] !== 0) {
+        resolutStatus = resolutStatus + 1;
+      }
+    }
+
+    if (resolutStatus === 3) {
+      win = winStatus;
+    } else if (numberOfFulled === 9) {
+      win = drawStatus;
+    }
+  });
+
+  return win;
 };

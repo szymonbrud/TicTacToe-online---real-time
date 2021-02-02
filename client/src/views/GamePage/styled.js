@@ -49,6 +49,34 @@ export const BoardWrapper = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+
+  ::before {
+    ${({ isWin }) =>
+      isWin === 1
+        ? css`
+            content: 'WYGRAŁEŚ';
+          `
+        : isWin === 2
+        ? css`
+            content: 'PRZEGRAŁEŚ';
+          `
+        : css`
+            content: 'REMIS';
+          `}
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    display: ${({ isOpen }) => (isOpen ? 'flex' : 'none')};
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: rgba(0, 0, 0, 0.7);
+    font-size: 50px;
+  }
 `;
 
 export const Field = styled.div`

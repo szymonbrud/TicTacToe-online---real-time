@@ -1,4 +1,4 @@
-import {joinRoom, removePlayer, revengesAccept, prepareRoomSettings} from './users';
+import {joinRoom, removePlayer, revengesAccept, prepareRoomSettings, checkWin} from './users';
 
 const mainSocket = (io) => {
   io.on('connect', (socket) => {
@@ -20,7 +20,16 @@ const mainSocket = (io) => {
     });
 
     socket.on('move', ({roomId, move, board}) => {
-      socket.to(roomId).emit('moveOpponent', {move, board});
+      const isWin = checkWin(board, move, socket.id);
+      const currentMove = move === 0 ? 1 : 0;
+      io.sockets
+        .in(roomId)
+        .emit('moveOpponent', {
+          move: currentMove,
+          board,
+          userWin: isWin ? socket.id : null,
+          winStatus: isWin,
+        });
     });
 
     socket.on('revenges', ({roomId}) => {

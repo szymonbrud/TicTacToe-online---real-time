@@ -4,7 +4,8 @@
     "react/jsx-filename-extension": [0, { "allow": "as-needed" }],
     "import/prefer-default-export": "off",
     "no-unused-vars": "warn",
-    "eqeqeq": "off"
+    "eqeqeq": "off",
+    "no-nested-ternary": "off"
   },
   "globals": {
     "navigator": true

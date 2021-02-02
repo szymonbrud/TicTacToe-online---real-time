@@ -47,9 +47,10 @@ const GamePage = () => {
     revenge,
     revengeButtonRef,
     mySocketId,
+    winStatus,
   } = useHooks(id, username);
 
-  console.log(isGameStart);
+  console.log(players);
 
   return (
     <>
@@ -102,7 +103,7 @@ const GamePage = () => {
             <InvadeButton />
           </InvadeButtonWrapper>
         </TopBar>
-        <BoardWrapper ref={boardRef}>
+        <BoardWrapper ref={boardRef} isOpen={winStatus !== 0} isWin={winStatus}>
           {board.map((field, fieldIndex) => (
             <Field onClick={() => playerMove(fieldIndex)}>
               {field !== 0 && field === 1 ? (

@@ -39,10 +39,11 @@ const useHooks = (roomId, username) => {
   const [isGameStart, setIsGameStart] = useState(false);
   const [revenge, setRevenge] = useState({ showRevenge: false, users: [] });
   const [mySocketId, setMySocketId] = useState('');
+  const [winStatus, setWinStatus] = useState(0);
 
   const revengeButtonRef = useRef();
 
-  const checkWin = futureBoard => {
+  const checkWin = (futureBoard, z) => {
     let xBoard;
     let elipseBoard;
 
@@ -59,7 +60,23 @@ const useHooks = (roomId, username) => {
     winBoardCombination.forEach(winComb => {
       const equals = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
-      if (equals(winComb, xBoard) || equals(winComb, elipseBoard)) {
+      if (equals(winComb, xBoard)) {
+        console.log(z);
+        console.log(players);
+        const pFind = players.find(p => p.userId === mySocketId);
+        console.log(pFind);
+        // console.log(players.symbol === 1 ? 'wygrałeś' : 'przegrałeś');
+
+        win = true;
+      }
+
+      if (equals(winComb, elipseBoard)) {
+        console.log(z);
+        console.log(players);
+        const pFind = players.find(p => p.userId === mySocketId);
+        console.log(pFind);
+        // console.log('o won');
+        // console.log(players.symbol === 2 ? 'wygrałeś' : 'przegrałeś');
         win = true;
       }
     });
@@ -79,6 +96,7 @@ const useHooks = (roomId, username) => {
     setMySocketId(socket.id);
     setPlayers(gameSettingsEditFormat);
     setRevenge({ showRevenge: false, users: [] });
+    setWinStatus(0);
 
     setBoard([0, 0, 0, 0, 0, 0, 0, 0, 0]);
     setIsGameStart(true);
@@ -87,17 +105,17 @@ const useHooks = (roomId, username) => {
   const playerMove = fieldIndex => {
     const findMyPlayerSettings = players.find(element => element.isMe);
     if (findMyPlayerSettings.symbol === move) {
-      const currentMove = move === 0 ? 1 : 0;
       const currentBoard = board;
       if (currentBoard[fieldIndex] === 0) {
         currentBoard[fieldIndex] = move + 1;
 
-        socket.emit('move', { move: currentMove, board: currentBoard, roomId });
+        socket.emit('move', { move, board: currentBoard, roomId });
 
+        const currentMove = move === 0 ? 1 : 0;
         setBoard(currentBoard);
         setMove(currentMove);
 
-        checkWin();
+        // checkWin();
       }
     } else {
       alert('to nie jest twój ruch');
@@ -143,11 +161,41 @@ const useHooks = (roomId, username) => {
       prepareGame(gameSettings);
     });
 
-    socket.on('moveOpponent', ({ move: movePlayer, board: boardPlayer }) => {
-      setMove(movePlayer);
-      setBoard(boardPlayer);
-      checkWin(boardPlayer);
-    });
+    socket.on(
+      'moveOpponent',
+      ({ move: movePlayer, board: boardPlayer, userWin, winStatus: winStatusE }) => {
+        setMove(movePlayer);
+        setBoard(boardPlayer);
+        if (winStatusE === 1) {
+          if (userWin === socket.id) {
+            setWinStatus(1);
+          } else {
+            setWinStatus(2);
+          }
+
+          setTimeout(() => {
+            setRevenge({ showRevenge: true, users: [] });
+          }, 2000);
+        }
+
+        if (winStatusE === 2) {
+          setWinStatus(3);
+
+          setTimeout(() => {
+            setRevenge({ showRevenge: true, users: [] });
+          }, 2000);
+        }
+        // if (userWin) {
+        //   if (userWin === socket.id) {
+        //     setWinStatus(1);
+        //   } else {
+        //     setWinStatus(2);
+        //   }
+
+        // }
+        // checkWin(boardPlayer, 'wyw');
+      },
+    );
 
     socket.on('revengesAcceped', revengesData => {
       preprocessingRevenge(revengesData);
@@ -175,6 +223,7 @@ const useHooks = (roomId, username) => {
     revenge,
     revengeButtonRef,
     mySocketId,
+    winStatus,
   };
 };
 
