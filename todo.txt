@@ -2,6 +2,9 @@
 TODO: sprawdzenie i wypisanie aktualnie działających i niedziałających funkcji 
 TODO: code review oraz naprawienie bugów
 
+TODO: remis
+TODO: kto wygrał
+TODO: naprawić żeby po zaczęciu nowej gry, nie było zaznaczonego pola
 
 TODO: potwierdzanie wygranej a może nawet grę nie wiem czy nie powinien przenieś na server?
 

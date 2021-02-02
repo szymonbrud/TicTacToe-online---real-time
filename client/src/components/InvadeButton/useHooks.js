@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import gsap from 'gsap';
 
-const useHooks = () => {
+const useHooks = roomId => {
   const [isButtonClicked, setIsButtonClicked] = useState(false);
 
   const buttonRef = useRef();
@@ -22,6 +22,17 @@ const useHooks = () => {
   const buttonAction = () => {
     setIsButtonClicked(true);
     buttonAnimatino();
+
+    const link = `http://localhost:3000/${roomId}`;
+
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+        console.log('link copied');
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
 
   return {

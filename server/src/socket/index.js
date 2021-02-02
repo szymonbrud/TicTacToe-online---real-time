@@ -36,7 +36,9 @@ const mainSocket = (io) => {
     });
 
     socket.on('disconnect', (data) => {
+      console.log('disconnect');
       const roomId = removePlayer(socket.id);
+      console.log(roomId);
       socket.to(roomId).emit('playerLeave');
     });
   });

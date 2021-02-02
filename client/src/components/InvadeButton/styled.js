@@ -12,7 +12,6 @@ export const Button = styled.button`
   justify-content: center;
 
   cursor: pointer;
-  margin: 60px;
 `;
 
 export const Icon = styled.img`

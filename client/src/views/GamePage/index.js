@@ -6,10 +6,11 @@ import ElipseIcon from 'assets/icons/ElipseIcon.svg';
 
 import InvadeButton from 'components/InvadeButton';
 
+import TopBar from 'components/TopBar';
+
 import {
   PlayerIcon,
   PlayerInsideWrapper,
-  PlayerName,
   PlayersWrapper,
   BoardWrapper,
   Field,
@@ -19,6 +20,16 @@ import {
   RematchText,
   RematchWrapper,
   RematchPlayerName,
+  MainWrapper,
+  BottomWrapper,
+  InvadeButtonWrapper,
+  Text,
+  RevengeWrapper,
+  PlayerAcceptStatus,
+  RevengeText,
+  PlayerName,
+  PlayerStatus,
+  RevengeButton,
 } from './styled';
 
 import useHooks from './useHooks';
@@ -34,44 +45,78 @@ const GamePage = () => {
     boardRef,
     acceptRevenge,
     revenge,
+    revengeButtonRef,
+    mySocketId,
   } = useHooks(id, username);
+
+  console.log(isGameStart);
 
   return (
     <>
-      <InvadeButton />
-      {/* <WaitForOpponentWrapper isGameStart={isGameStart}>
-        Czekanie na przeciwnika
-      </WaitForOpponentWrapper>
-      {revenge.showRevenge && (
-        <RematchWrapper>
-          <RematchText>REMATCH?</RematchText>
-          {players.map(e => (
-            <RematchPlayerName>
-              {`${e.username}: ${revenge.users.includes(e.userId) ? 'accepted' : 'wait'}`}
-            </RematchPlayerName>
-          ))}
-          <RematchButton onClick={acceptRevenge}>rematch</RematchButton>
-        </RematchWrapper>
+      {!isGameStart && (
+        <WaitForOpponentWrapper>
+          <TopBar>
+            <InvadeButton />
+          </TopBar>
+          <Text>czekanie na przeciwnika</Text>
+          <InvadeButton />
+        </WaitForOpponentWrapper>
       )}
-      <PlayersWrapper>
-        {players.map(player => (
-          <PlayerInsideWrapper isMove={player.symbol === move} isMe={player.isMe}>
-            <PlayerIcon src={player.symbol ? ElipseIcon : xIcon} />
-            <PlayerName>{player.username}</PlayerName>
-          </PlayerInsideWrapper>
-        ))}
-      </PlayersWrapper>
-      <BoardWrapper ref={boardRef}>
-        {board.map((field, fieldIndex) => (
-          <Field onClick={() => playerMove(fieldIndex)}>
-            {field !== 0 && field === 1 ? (
-              <FieldSymbolImage src={xIcon} alt="x" />
-            ) : (
-              field === 2 && <FieldSymbolImage src={ElipseIcon} alt="o" />
-            )}
-          </Field>
-        ))}
-      </BoardWrapper> */}
+
+      {revenge.showRevenge && (
+        <RevengeWrapper>
+          <TopBar>
+            <InvadeButton />
+          </TopBar>
+          <RevengeText>Rewanż</RevengeText>
+          {players.map(player => (
+            <PlayerAcceptStatus>
+              <PlayerName>{player.username}</PlayerName>
+              <PlayerStatus isAccepted={revenge.users.includes(player.userId)}>
+                {revenge.users.includes(player.userId)
+                  ? 'zatwierdzono'
+                  : 'oczekiwanie na potwierdzenie'}
+              </PlayerStatus>
+            </PlayerAcceptStatus>
+          ))}
+          <RevengeButton ref={revengeButtonRef} onClick={acceptRevenge}>
+            {revenge.users.includes(mySocketId) ? 'potwierdzono' : 'potwierdź'}
+          </RevengeButton>
+        </RevengeWrapper>
+      )}
+
+      <MainWrapper>
+        <TopBar>
+          <PlayersWrapper>
+            {players.map(player => (
+              <PlayerInsideWrapper isMove={player.symbol === move}>
+                {player.username}
+                <PlayerIcon
+                  src={player.symbol ? ElipseIcon : xIcon}
+                  alt={player.symbol ? 'circle' : 'x'}
+                />
+              </PlayerInsideWrapper>
+            ))}
+          </PlayersWrapper>
+          <InvadeButtonWrapper>
+            <InvadeButton />
+          </InvadeButtonWrapper>
+        </TopBar>
+        <BoardWrapper ref={boardRef}>
+          {board.map((field, fieldIndex) => (
+            <Field onClick={() => playerMove(fieldIndex)}>
+              {field !== 0 && field === 1 ? (
+                <FieldSymbolImage src={xIcon} alt="x" />
+              ) : (
+                field === 2 && <FieldSymbolImage src={ElipseIcon} alt="o" />
+              )}
+            </Field>
+          ))}
+        </BoardWrapper>
+        <BottomWrapper>
+          <InvadeButton />
+        </BottomWrapper>
+      </MainWrapper>
     </>
   );
 };

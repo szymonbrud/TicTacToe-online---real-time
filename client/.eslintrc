@@ -6,6 +6,9 @@
     "no-unused-vars": "warn",
     "eqeqeq": "off"
   },
+  "globals": {
+    "navigator": true
+  },
   "settings": {
     "import/resolver": {
       "node": {

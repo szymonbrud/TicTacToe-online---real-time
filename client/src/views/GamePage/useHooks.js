@@ -1,5 +1,6 @@
 import io from 'socket.io-client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import gsap from 'gsap';
 
 const API = 'http://localhost:5000';
 
@@ -36,15 +37,10 @@ const useHooks = (roomId, username) => {
   const [move, setMove] = useState(elipse);
   const [players, setPlayers] = useState([]);
   const [isGameStart, setIsGameStart] = useState(false);
-  const [revenge, setRevenge] = useState({ showRevenge: true, users: [] });
+  const [revenge, setRevenge] = useState({ showRevenge: false, users: [] });
+  const [mySocketId, setMySocketId] = useState('');
 
-  const createTheBoard = () => {
-    const boardGen = [];
-    for (let i = 0; i < 9; i += 1) {
-      boardGen.push(emptyField);
-    }
-    setBoard(boardGen);
-  };
+  const revengeButtonRef = useRef();
 
   const checkWin = futureBoard => {
     let xBoard;
@@ -70,7 +66,7 @@ const useHooks = (roomId, username) => {
 
     if (win) {
       setTimeout(() => {
-        alert('WIN');
+        setRevenge({ showRevenge: true, users: [] });
       }, 300);
     }
   };
@@ -80,9 +76,11 @@ const useHooks = (roomId, username) => {
     const gameSettingsEditFormat = gameSettings;
     gameSettingsEditFormat[indexOfMyPlayer].isMe = true;
 
+    setMySocketId(socket.id);
     setPlayers(gameSettingsEditFormat);
-    setBoard(clearBoard);
     setRevenge({ showRevenge: false, users: [] });
+
+    setBoard([0, 0, 0, 0, 0, 0, 0, 0, 0]);
     setIsGameStart(true);
   };
 
@@ -122,7 +120,20 @@ const useHooks = (roomId, username) => {
   };
 
   const acceptRevenge = () => {
-    socket.emit('revenges', { roomId });
+    if (!revenge.users.includes(socket.id)) {
+      socket.emit('revenges', { roomId });
+
+      gsap.to(revengeButtonRef.current, 0.15, {
+        background: '#000',
+        color: '#fff',
+        scale: 1.1,
+      });
+
+      gsap.to(revengeButtonRef.current, 0.15, {
+        scale: 1,
+        delay: 0.15,
+      });
+    }
   };
 
   useEffect(() => {
@@ -144,13 +155,12 @@ const useHooks = (roomId, username) => {
   }, []);
 
   useEffect(() => {
-    createTheBoard();
+    setBoard(clearBoard);
     socket.emit('join', { roomId, username }, res => {
       // TODO: jeżęli res error to wyświetlić error
     });
 
     socket.on('playerLeave', () => {
-      console.log('player leave');
       setIsGameStart(false);
     });
   }, []);
@@ -163,6 +173,8 @@ const useHooks = (roomId, username) => {
     playerMove,
     acceptRevenge,
     revenge,
+    revengeButtonRef,
+    mySocketId,
   };
 };
 

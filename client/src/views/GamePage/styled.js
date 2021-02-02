@@ -1,47 +1,43 @@
 import styled, { css } from 'styled-components';
+import media from 'assets/styles/media';
+
+export const MainWrapper = styled.div`
+  background: ${({ theme }) => theme.colors.drityWhite};
+  min-height: 100vh;
+`;
 
 export const PlayersWrapper = styled.div`
-  position: absolute;
-  top: 4%;
-  left: 8%;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 82px;
+  background: white;
 `;
 
 export const PlayerInsideWrapper = styled.div`
-  height: 170px;
-  min-width: 150px;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
+  background: white;
   position: relative;
+  font-size: 18px;
+  padding: 0 27px;
+  margin: 0;
 
   ::before {
-    display: ${({ isMe }) => (isMe ? 'block' : 'none')};
+    content: '';
     position: absolute;
-    content: 'YOU';
-    bottom: 15px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-weight: 800;
+    width: 100%;
+    height: 7px;
+    bottom: 0;
+    left: 0;
+    background: ${({ theme }) => theme.colors.orange};
+    display: ${({ isMove }) => (isMove ? 'block' : 'none')};
   }
-
-  ${({ isMove }) =>
-    isMove &&
-    css`
-      background-color: ${({ theme }) => theme.colors.lightBlue};
-    `}
 `;
 
 export const PlayerIcon = styled.img`
-  width: 26px;
-  margin-bottom: 20px;
-`;
-
-export const PlayerName = styled.p`
-  font-size: 24px;
-  padding: 0 20px;
-  margin: 0;
+  width: 20px;
+  margin-left: 12px;
 `;
 
 export const BoardWrapper = styled.div`
@@ -57,34 +53,126 @@ export const BoardWrapper = styled.div`
 
 export const Field = styled.div`
   border-radius: 5px;
-  border: 4px solid ${({ theme }) => theme.colors.darkBlue};
-  background: ${({ theme }) => theme.colors.lightBlue};
+  border: 4px solid black;
+  background: white;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+
+  :hover {
+    border: 4px solid ${({ theme }) => theme.colors.orange};
+  }
+`;
+
+export const BottomWrapper = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 20vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ${media.desktop`
+    display: none;
+  `}
+`;
+
+export const InvadeButtonWrapper = styled.div`
+  display: none;
+  ${media.desktop`
+    display: block;
+  `}
 `;
 
 export const WaitForOpponentWrapper = styled.div`
-  background: rgba(255, 255, 255, 0.8);
-
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-
-  z-index: 20;
-
-  display: ${({ isGameStart }) => (isGameStart ? 'none' : 'flex')};
+  background: ${({ theme }) => theme.colors.drityWhite};
+  z-index: 100;
+  display: flex;
   align-items: center;
   justify-content: center;
-
-  font-size: 24px;
+  flex-direction: column;
 `;
 
+export const Text = styled.p`
+  font-size: 30px;
+  margin: 0 0 100px 0;
+`;
+
+export const RevengeWrapper = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: ${({ theme }) => theme.colors.drityWhite};
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+`;
+
+export const RevengeText = styled.h1`
+  font-size: 60px;
+  font-weight: 700;
+  margin: 0 0 43px 0;
+`;
+
+export const PlayerAcceptStatus = styled.div`
+  width: 307px;
+  height: 97px;
+  margin-top: 13px;
+  background: ${({ theme }) => theme.colors.crema};
+  display: flex;
+  flex-direction: column;
+  padding: 25px 22px;
+`;
+
+export const PlayerName = styled.p`
+  font-weight: 700;
+  font-size: 18px;
+  margin: 0 0 5px 0;
+`;
+
+export const PlayerStatus = styled.p`
+  font-size: 18px;
+  margin: 0;
+
+  ${({ isAccepted }) =>
+    isAccepted &&
+    css`
+      color: ${({ theme }) => theme.colors.orange};
+      font-weight: 700;
+    `}
+`;
+
+export const RevengeButton = styled.button`
+  background: white;
+  border: 3px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  font-size: 18px;
+  width: 158px;
+  height: 55px;
+  margin: 100px 0 0 0;
+
+  cursor: pointer;
+`;
+
+//-----------------------------------------------------
+
 export const FieldSymbolImage = styled.img`
-  width: 30px;
+  width: 50px;
 `;
 
 export const RematchWrapper = styled.div`

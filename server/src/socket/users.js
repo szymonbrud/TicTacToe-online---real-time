@@ -37,7 +37,7 @@ export const removePlayer = (userId) => {
   if (rooms[indexOfRoomWithPlayer].users.length === 1) {
     rooms.splice(indexOfRoomWithPlayer, 1);
   } else {
-    const roomId = rooms[indexOfRoomWithPlayer].id;
+    const roomId = rooms[indexOfRoomWithPlayer].roomId;
     rooms[indexOfRoomWithPlayer].users.splice(indexOfPlayer, 1);
     return roomId;
   }
@@ -52,6 +52,10 @@ export const revengesAccept = (roomId, userId) => {
   }
 
   const revengeCurrentRoom = revenges.find((revenge) => revenge.roomId === roomId);
+  if (revengeCurrentRoom.users.length === 2) {
+    const revengeCurrentRoomIndex = revenges.findIndex((revenge) => revenge.roomId === roomId);
+    revenges.splice(revengeCurrentRoomIndex, 1);
+  }
   return revengeCurrentRoom;
 };
 
