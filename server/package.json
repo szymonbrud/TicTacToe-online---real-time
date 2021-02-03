@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon start.js",
+    "start": "node start.js",
     "test": "jest --watch --detectOpenHandles --runInBand",
     "test:nw": "jest --runInBand --detectOpenHandles",
     "test:cy": "nodemon start.js"

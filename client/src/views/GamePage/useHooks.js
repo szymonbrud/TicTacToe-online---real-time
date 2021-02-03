@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import gsap from 'gsap';
 
-const API = 'http://localhost:5000';
+const API = 'https://tictactoeoriginbackend.herokuapp.com';
 
 let socket;
 
