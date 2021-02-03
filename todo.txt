@@ -1,14 +1,18 @@
 --- CURRENT:
-TODO: sprawdzenie i wypisanie aktualnie działających i niedziałających funkcji 
-TODO: code review oraz naprawienie bugów
 
-TODO: remis
-TODO: kto wygrał
-
-TODO: potwierdzanie wygranej a może nawet grę nie wiem czy nie powinien przenieś na server?
+TODO: działający deploy
+TOOD: review
 
 --- DONE: 
+TODO: potwierdzanie wygranej a może nawet grę nie wiem czy nie powinien przenieś na server?
+TODO: code review oraz naprawienie bugów
+TODO: sprawdzenie i wypisanie aktualnie działających i niedziałających funkcji 
+TODO: remis
+TODO: kto wygrał
 TODO: dwóch graczy o takich samych nazwach ?
 TODO: po wyjsciu kogoś gra się zatrzymuje, jest oczekiwanie na nowego gracz
 TODO: wygrane są wyświetlane, po wygraniu powienien zobaczyć ktoś kończący ruch, po czym wyskakuje ekran z wygraną, można kliknąć rewanż, bedzie na tym ekranie 2 nicki oraz będzie pokazane czy ktoś kilknął to jeśli tak to przenosi do czystej gierki
 TODO: naprawić żeby po zaczęciu nowej gry, nie było zaznaczonego pola
+TODO: naprawnienie błędu związanego z dołaczeniem więcej niż 2 graczy do jendnego pokoju
+TODO: resetowac zapraszanie do pokoju po zresetowaniu gry
+TODO: przycisk generujący link powienien generować link niezależnie od domeny

@@ -1,5 +1,6 @@
 import io from 'socket.io-client';
 import { useEffect, useState, useRef } from 'react';
+import { useHistory } from 'react-router-dom';
 import gsap from 'gsap';
 
 const API = 'http://localhost:5000';
@@ -43,50 +44,52 @@ const useHooks = (roomId, username) => {
 
   const revengeButtonRef = useRef();
 
-  const checkWin = (futureBoard, z) => {
-    let xBoard;
-    let elipseBoard;
+  const history = useHistory();
 
-    if (futureBoard) {
-      xBoard = futureBoard.map(e => (e === 1 ? 0 : e));
-      elipseBoard = futureBoard.map(e => (e === 2 ? 0 : e));
-    } else {
-      xBoard = board.map(e => (e === 1 ? 0 : e));
-      elipseBoard = board.map(e => (e === 2 ? 0 : e));
-    }
+  // const checkWin = (futureBoard, z) => {
+  //   let xBoard;
+  //   let elipseBoard;
 
-    let win = false;
+  //   if (futureBoard) {
+  //     xBoard = futureBoard.map(e => (e === 1 ? 0 : e));
+  //     elipseBoard = futureBoard.map(e => (e === 2 ? 0 : e));
+  //   } else {
+  //     xBoard = board.map(e => (e === 1 ? 0 : e));
+  //     elipseBoard = board.map(e => (e === 2 ? 0 : e));
+  //   }
 
-    winBoardCombination.forEach(winComb => {
-      const equals = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+  //   let win = false;
 
-      if (equals(winComb, xBoard)) {
-        console.log(z);
-        console.log(players);
-        const pFind = players.find(p => p.userId === mySocketId);
-        console.log(pFind);
-        // console.log(players.symbol === 1 ? 'wygrałeś' : 'przegrałeś');
+  //   winBoardCombination.forEach(winComb => {
+  //     const equals = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
-        win = true;
-      }
+  //     if (equals(winComb, xBoard)) {
+  //       console.log(z);
+  //       console.log(players);
+  //       const pFind = players.find(p => p.userId === mySocketId);
+  //       console.log(pFind);
+  //       // console.log(players.symbol === 1 ? 'wygrałeś' : 'przegrałeś');
 
-      if (equals(winComb, elipseBoard)) {
-        console.log(z);
-        console.log(players);
-        const pFind = players.find(p => p.userId === mySocketId);
-        console.log(pFind);
-        // console.log('o won');
-        // console.log(players.symbol === 2 ? 'wygrałeś' : 'przegrałeś');
-        win = true;
-      }
-    });
+  //       win = true;
+  //     }
 
-    if (win) {
-      setTimeout(() => {
-        setRevenge({ showRevenge: true, users: [] });
-      }, 300);
-    }
-  };
+  //     if (equals(winComb, elipseBoard)) {
+  //       console.log(z);
+  //       console.log(players);
+  //       const pFind = players.find(p => p.userId === mySocketId);
+  //       console.log(pFind);
+  //       // console.log('o won');
+  //       // console.log(players.symbol === 2 ? 'wygrałeś' : 'przegrałeś');
+  //       win = true;
+  //     }
+  //   });
+
+  //   if (win) {
+  //     setTimeout(() => {
+  //       setRevenge({ showRevenge: true, users: [] });
+  //     }, 300);
+  //   }
+  // };
 
   const prepareGame = gameSettings => {
     const indexOfMyPlayer = gameSettings.findIndex(element => element.userId === socket.id);
@@ -205,6 +208,7 @@ const useHooks = (roomId, username) => {
   useEffect(() => {
     setBoard(clearBoard);
     socket.emit('join', { roomId, username }, res => {
+      history.push('/error');
       // TODO: jeżęli res error to wyświetlić error
     });
 

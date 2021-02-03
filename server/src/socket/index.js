@@ -8,28 +8,28 @@ const mainSocket = (io) => {
       if (resoult.error) {
         callback({error: true, desc: resoult.desc});
         return;
-      }
+      } else {
+        console.log('aktywacja drugiejczęści');
 
-      socket.join(roomId);
+        socket.join(roomId);
 
-      if (resoult.users.length === 2) {
-        const roomSettings = prepareRoomSettings(roomId);
+        if (resoult.users.length === 2) {
+          const roomSettings = prepareRoomSettings(roomId);
 
-        io.sockets.in(roomId).emit('prepareGame', roomSettings);
+          io.sockets.in(roomId).emit('prepareGame', roomSettings);
+        }
       }
     });
 
     socket.on('move', ({roomId, move, board}) => {
       const isWin = checkWin(board, move, socket.id);
       const currentMove = move === 0 ? 1 : 0;
-      io.sockets
-        .in(roomId)
-        .emit('moveOpponent', {
-          move: currentMove,
-          board,
-          userWin: isWin ? socket.id : null,
-          winStatus: isWin,
-        });
+      io.sockets.in(roomId).emit('moveOpponent', {
+        move: currentMove,
+        board,
+        userWin: isWin ? socket.id : null,
+        winStatus: isWin,
+      });
     });
 
     socket.on('revenges', ({roomId}) => {
@@ -47,8 +47,10 @@ const mainSocket = (io) => {
     socket.on('disconnect', (data) => {
       console.log('disconnect');
       const roomId = removePlayer(socket.id);
-      console.log(roomId);
-      socket.to(roomId).emit('playerLeave');
+      console.log(`roomId: ${roomId}`);
+      if (roomId) {
+        socket.to(roomId).emit('playerLeave');
+      }
     });
   });
 };

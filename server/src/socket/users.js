@@ -27,10 +27,12 @@ export const joinRoom = (roomId, username, userId) => {
     if (existRoom.users.length === 2) {
       return {error: true, desc: 'Pokój jest pełny'};
     }
+    console.log('zapisywanie 1');
     const indexOfExistRoom = rooms.findIndex((room) => room.roomId === roomId);
     rooms[indexOfExistRoom].users.push({username, userId});
     return {roomId, users: rooms[indexOfExistRoom].users, error: false};
   } else {
+    console.log('zapisywanie 2');
     const roomData = {roomId, users: [{username, userId}]};
     rooms.push(roomData);
     return {...roomData, error: false};
@@ -38,17 +40,19 @@ export const joinRoom = (roomId, username, userId) => {
 };
 
 export const removePlayer = (userId) => {
-  let indexOfPlayer = -1;
-  const indexOfRoomWithPlayer = rooms.findIndex((room) =>
-    room.users.map((user, userIndex) => {
-      if (user.userId === userId) {
-        indexOfPlayer = userIndex;
-        return;
-      }
-    }),
-  );
+  let indexOfRoomWithPlayer = -1;
+  let indexOfUser = -1;
 
-  if (indexOfRoomWithPlayer === -1) {
+  rooms.forEach((room, roomIndex) => {
+    room.users.forEach((user, userIndex) => {
+      if (user.userId === userId) {
+        indexOfUser = userIndex;
+        indexOfRoomWithPlayer = roomIndex;
+      }
+    });
+  });
+
+  if (indexOfRoomWithPlayer === -1 || indexOfUser === -1) {
     return;
   }
 
@@ -56,7 +60,7 @@ export const removePlayer = (userId) => {
     rooms.splice(indexOfRoomWithPlayer, 1);
   } else {
     const roomId = rooms[indexOfRoomWithPlayer].roomId;
-    rooms[indexOfRoomWithPlayer].users.splice(indexOfPlayer, 1);
+    rooms[indexOfRoomWithPlayer].users.splice(indexOfUser, 1);
     return roomId;
   }
 };
@@ -79,6 +83,8 @@ export const revengesAccept = (roomId, userId) => {
 
 export const prepareRoomSettings = (roomId) => {
   const roomSettings = rooms.find((room) => room.roomId === roomId);
+  const revengeRoomIndex = revenges.findIndex((revenges) => revenges.roomId === roomId);
+  revenges.splice(revengeRoomIndex, 1);
 
   const whichPlayerStart = Math.round(Math.random() * (1 - 0)) + 0;
 

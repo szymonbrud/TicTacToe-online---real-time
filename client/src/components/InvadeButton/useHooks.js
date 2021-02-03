@@ -23,7 +23,7 @@ const useHooks = roomId => {
     setIsButtonClicked(true);
     buttonAnimatino();
 
-    const link = `http://localhost:3000/${roomId}`;
+    const link = `${window.location.origin}/${roomId}`;
 
     navigator.clipboard
       .writeText(link)

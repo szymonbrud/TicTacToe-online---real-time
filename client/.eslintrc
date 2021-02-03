@@ -8,7 +8,8 @@
     "no-nested-ternary": "off"
   },
   "globals": {
-    "navigator": true
+    "navigator": true,
+    "window": true
   },
   "settings": {
     "import/resolver": {
