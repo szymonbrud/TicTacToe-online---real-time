@@ -3,6 +3,7 @@ import {joinRoom, removePlayer, revengesAccept, prepareRoomSettings, checkWin} f
 const mainSocket = (io) => {
   io.on('connect', (socket) => {
     socket.on('join', ({roomId, username}, callback) => {
+      console.log('JOIN');
       const resoult = joinRoom(roomId, username, socket.id);
 
       if (resoult.error) {

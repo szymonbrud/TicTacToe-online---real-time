@@ -6,7 +6,7 @@ const useHooks = roomId => {
 
   const buttonRef = useRef();
 
-  const buttonAnimatino = () => {
+  const buttonAnimation = () => {
     gsap.to(buttonRef.current, 0.15, {
       scale: 1.1,
       background: '#000',
@@ -21,7 +21,7 @@ const useHooks = roomId => {
 
   const buttonAction = () => {
     setIsButtonClicked(true);
-    buttonAnimatino();
+    buttonAnimation();
 
     const link = `${window.location.origin}/${roomId}`;
 

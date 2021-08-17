@@ -197,52 +197,6 @@ export const RevengeButton = styled.button`
   cursor: pointer;
 `;
 
-//-----------------------------------------------------
-
 export const FieldSymbolImage = styled.img`
   width: 50px;
-`;
-
-export const RematchWrapper = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  background: rgba(255, 255, 255, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-
-  z-index: 10;
-`;
-
-export const RematchButton = styled.button`
-  background: white;
-  border: 2px solid black;
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 120px;
-  height: 50px;
-  font-size: 18px;
-  margin: 40px 0 0 0;
-
-  transition: background 0.2s, color 0.2s;
-
-  :hover {
-    background: black;
-    color: white;
-  }
-`;
-
-export const RematchPlayerName = styled.p`
-  font-size: 18px;
-  margin: 15px 0;
-`;
-
-export const RematchText = styled.h1`
-  margin: 0 0 40px 0;
 `;

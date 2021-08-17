@@ -10,19 +10,36 @@ import mainSocket from './socket';
 const app = express();
 export const server = http.createServer(app);
 
-const io = require('socket.io')(server, {
-  cors: {
-    origin: 'https://tictactoeorigin.web.app',
-    methods: ['GET', 'POST'],
-  },
-});
+let io;
+
+if (process.env.NODE_ENV === 'develop') {
+  io = require('socket.io')(server, {
+    cors: {
+      origin: 'http://localhost:3000',
+      methods: ['GET', 'POST'],
+    },
+  });
+} else {
+  io = require('socket.io')(server, {
+    cors: {
+      origin: 'https://tictactoeorigin.web.app',
+      methods: ['GET', 'POST'],
+    },
+  });
+}
 
 mainSocket(io);
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-const whitelist = ['https://tictactoeorigin.web.app'];
+let whitelist;
+
+if (process.env.NODE_ENV === 'develop') {
+  whitelist = ['http://localhost:3000'];
+} else {
+  whitelist = ['https://tictactoeorigin.web.app'];
+}
 
 const corsOptions = {
   credentials: true,

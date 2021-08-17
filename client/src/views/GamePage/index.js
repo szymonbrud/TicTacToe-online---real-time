@@ -5,7 +5,6 @@ import xIcon from 'assets/icons/xIcon.svg';
 import ElipseIcon from 'assets/icons/ElipseIcon.svg';
 
 import InvadeButton from 'components/InvadeButton';
-
 import TopBar from 'components/TopBar';
 
 import {
@@ -16,10 +15,6 @@ import {
   Field,
   WaitForOpponentWrapper,
   FieldSymbolImage,
-  RematchButton,
-  RematchText,
-  RematchWrapper,
-  RematchPlayerName,
   MainWrapper,
   BottomWrapper,
   InvadeButtonWrapper,
@@ -50,8 +45,6 @@ const GamePage = () => {
     winStatus,
   } = useHooks(id, username);
 
-  console.log(players);
-
   return (
     <>
       {!isGameStart && (
@@ -63,7 +56,6 @@ const GamePage = () => {
           <InvadeButton />
         </WaitForOpponentWrapper>
       )}
-
       {revenge.showRevenge && (
         <RevengeWrapper>
           <TopBar>
@@ -85,7 +77,6 @@ const GamePage = () => {
           </RevengeButton>
         </RevengeWrapper>
       )}
-
       <MainWrapper>
         <TopBar>
           <PlayersWrapper>

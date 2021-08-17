@@ -3,7 +3,13 @@ import { useEffect, useState, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import gsap from 'gsap';
 
-const API = 'https://tictactoeoriginbackend.herokuapp.com';
+let API;
+
+if (window.location.host === 'localhost:3000') {
+  API = 'http://localhost:5000';
+} else {
+  API = 'https://tictactoeoriginbackend.herokuapp.com';
+}
 
 let socket;
 
@@ -12,26 +18,7 @@ const [emptyField] = fieldTypeBoard;
 const symbolType = [0, 1];
 const [, elipse] = symbolType;
 
-const clearBoard = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-
-const winBoardCombination = [
-  [1, 1, 1, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 1, 1, 1, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 1, 1, 1],
-  [1, 0, 0, 1, 0, 0, 1, 0, 0],
-  [0, 1, 0, 0, 1, 0, 0, 1, 0],
-  [0, 0, 1, 0, 0, 1, 0, 0, 1],
-  [1, 0, 0, 0, 1, 0, 0, 0, 1],
-  [0, 0, 1, 0, 1, 0, 1, 0, 0],
-  [2, 2, 2, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 2, 2, 2, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 2, 2, 2],
-  [2, 0, 0, 2, 0, 0, 2, 0, 0],
-  [0, 2, 0, 0, 2, 0, 0, 2, 0],
-  [0, 0, 2, 0, 0, 2, 0, 0, 2],
-  [2, 0, 0, 0, 2, 0, 0, 0, 2],
-  [0, 0, 2, 0, 2, 0, 2, 0, 0],
-];
+const clearBoard = new Array(9).fill(0);
 
 const useHooks = (roomId, username) => {
   const [board, setBoard] = useState([]);
@@ -46,51 +33,6 @@ const useHooks = (roomId, username) => {
 
   const history = useHistory();
 
-  // const checkWin = (futureBoard, z) => {
-  //   let xBoard;
-  //   let elipseBoard;
-
-  //   if (futureBoard) {
-  //     xBoard = futureBoard.map(e => (e === 1 ? 0 : e));
-  //     elipseBoard = futureBoard.map(e => (e === 2 ? 0 : e));
-  //   } else {
-  //     xBoard = board.map(e => (e === 1 ? 0 : e));
-  //     elipseBoard = board.map(e => (e === 2 ? 0 : e));
-  //   }
-
-  //   let win = false;
-
-  //   winBoardCombination.forEach(winComb => {
-  //     const equals = (a, b) => JSON.stringify(a) === JSON.stringify(b);
-
-  //     if (equals(winComb, xBoard)) {
-  //       console.log(z);
-  //       console.log(players);
-  //       const pFind = players.find(p => p.userId === mySocketId);
-  //       console.log(pFind);
-  //       // console.log(players.symbol === 1 ? 'wygrałeś' : 'przegrałeś');
-
-  //       win = true;
-  //     }
-
-  //     if (equals(winComb, elipseBoard)) {
-  //       console.log(z);
-  //       console.log(players);
-  //       const pFind = players.find(p => p.userId === mySocketId);
-  //       console.log(pFind);
-  //       // console.log('o won');
-  //       // console.log(players.symbol === 2 ? 'wygrałeś' : 'przegrałeś');
-  //       win = true;
-  //     }
-  //   });
-
-  //   if (win) {
-  //     setTimeout(() => {
-  //       setRevenge({ showRevenge: true, users: [] });
-  //     }, 300);
-  //   }
-  // };
-
   const prepareGame = gameSettings => {
     const indexOfMyPlayer = gameSettings.findIndex(element => element.userId === socket.id);
     const gameSettingsEditFormat = gameSettings;
@@ -101,7 +43,7 @@ const useHooks = (roomId, username) => {
     setRevenge({ showRevenge: false, users: [] });
     setWinStatus(0);
 
-    setBoard([0, 0, 0, 0, 0, 0, 0, 0, 0]);
+    setBoard(clearBoard);
     setIsGameStart(true);
   };
 
@@ -117,11 +59,9 @@ const useHooks = (roomId, username) => {
         const currentMove = move === 0 ? 1 : 0;
         setBoard(currentBoard);
         setMove(currentMove);
-
-        // checkWin();
       }
     } else {
-      alert('to nie jest twój ruch');
+      alert('To nie jest twój ruch!');
     }
   };
 
@@ -188,15 +128,6 @@ const useHooks = (roomId, username) => {
             setRevenge({ showRevenge: true, users: [] });
           }, 2000);
         }
-        // if (userWin) {
-        //   if (userWin === socket.id) {
-        //     setWinStatus(1);
-        //   } else {
-        //     setWinStatus(2);
-        //   }
-
-        // }
-        // checkWin(boardPlayer, 'wyw');
       },
     );
 
@@ -209,7 +140,6 @@ const useHooks = (roomId, username) => {
     setBoard(clearBoard);
     socket.emit('join', { roomId, username }, res => {
       history.push('/error');
-      // TODO: jeżęli res error to wyświetlić error
     });
 
     socket.on('playerLeave', () => {

@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
+    "dev": "set NODE_ENV=develop&&node start.js ",
     "start": "node start.js",
     "test": "jest --watch --detectOpenHandles --runInBand",
     "test:nw": "jest --runInBand --detectOpenHandles",
