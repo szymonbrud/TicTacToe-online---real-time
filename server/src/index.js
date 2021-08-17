@@ -2,7 +2,6 @@ import express from 'express';
 import http from 'http';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-// import {env} from 'process';
 require('dotenv').config();
 
 import mainSocket from './socket';
@@ -45,7 +44,7 @@ const corsOptions = {
   credentials: true,
   origin: (origin, callback) => {
     if (whitelist.includes(origin)) {
-      console.log('this orgin is correct');
+      console.log('this origin is correct');
       return callback(null, true);
     }
 
@@ -53,20 +52,7 @@ const corsOptions = {
   },
 };
 
-// if (process.env.NODE_ENV === 'production') {
 app.use(cors(corsOptions));
-// } else {
-// app.use(cors());
-// app.use(cors(corsOptions));
-// }
-
-// const corsOptions = {
-//   origin: 'http://localhost:3000',
-//   optionsSuccessStatus: 200,
-// };
-
-// app.use(cors(corsOptions));
-// app.use(cors());
 
 server.listen(process.env.PORT || 5000, () => console.log('Server is working on: 5000'));
 

@@ -4,17 +4,15 @@ const mainSocket = (io) => {
   io.on('connect', (socket) => {
     socket.on('join', ({roomId, username}, callback) => {
       console.log('JOIN');
-      const resoult = joinRoom(roomId, username, socket.id);
+      const result = joinRoom(roomId, username, socket.id);
 
-      if (resoult.error) {
-        callback({error: true, desc: resoult.desc});
+      if (result.error) {
+        callback({error: true, desc: result.desc});
         return;
       } else {
-        console.log('aktywacja drugiejczęści');
-
         socket.join(roomId);
 
-        if (resoult.users.length === 2) {
+        if (result.users.length === 2) {
           const roomSettings = prepareRoomSettings(roomId);
 
           io.sockets.in(roomId).emit('prepareGame', roomSettings);
@@ -48,7 +46,6 @@ const mainSocket = (io) => {
     socket.on('disconnect', (data) => {
       console.log('disconnect');
       const roomId = removePlayer(socket.id);
-      console.log(`roomId: ${roomId}`);
       if (roomId) {
         socket.to(roomId).emit('playerLeave');
       }

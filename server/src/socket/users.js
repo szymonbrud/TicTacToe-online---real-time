@@ -8,12 +8,10 @@ export const joinRoom = (roomId, username, userId) => {
     if (existRoom.users.length === 2) {
       return {error: true, desc: 'Pokój jest pełny'};
     }
-    console.log('zapisywanie 1');
     const indexOfExistRoom = rooms.findIndex((room) => room.roomId === roomId);
     rooms[indexOfExistRoom].users.push({username, userId});
     return {roomId, users: rooms[indexOfExistRoom].users, error: false};
   } else {
-    console.log('zapisywanie 2');
     const roomData = {roomId, users: [{username, userId}]};
     rooms.push(roomData);
     return {...roomData, error: false};
@@ -67,7 +65,7 @@ export const prepareRoomSettings = (roomId) => {
   const revengeRoomIndex = revenges.findIndex((revenges) => revenges.roomId === roomId);
   revenges.splice(revengeRoomIndex, 1);
 
-  const whichPlayerStart = Math.round(Math.random() * (1 - 0)) + 0;
+  const whichPlayerStart = Math.round(Math.random());
 
   const resoultRoomSettingsFormat = [
     {
@@ -85,7 +83,7 @@ export const prepareRoomSettings = (roomId) => {
   return resoultRoomSettingsFormat;
 };
 
-export const checkWin = (board, move, userId) => {
+export const checkWin = (board) => {
   const winBoardCombination = [
     [1, 1, 1, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 1, 1, 1, 0, 0, 0],
@@ -113,9 +111,8 @@ export const checkWin = (board, move, userId) => {
   winBoardCombination.forEach((winBoard) => {
     const xBoard = winBoard.map((e) => (e === 1 ? 0 : e));
     const elipseBoard = winBoard.map((e) => (e === 2 ? 0 : e));
-    console.log(xBoard);
 
-    let resolutStatus = 0;
+    let resultStatus = 0;
     let numberOfFulled = 0;
 
     board.forEach((e) => {
@@ -124,17 +121,17 @@ export const checkWin = (board, move, userId) => {
 
     for (let mainIndex = 0; mainIndex < 9; mainIndex++) {
       if (xBoard[mainIndex] === board[mainIndex] && xBoard[mainIndex] !== 0) {
-        resolutStatus = resolutStatus + 1;
+        resultStatus = resultStatus + 1;
       }
     }
 
     for (let mainIndex = 0; mainIndex < 9; mainIndex++) {
       if (elipseBoard[mainIndex] === board[mainIndex] && elipseBoard[mainIndex] !== 0) {
-        resolutStatus = resolutStatus + 1;
+        resultStatus = resultStatus + 1;
       }
     }
 
-    if (resolutStatus === 3) {
+    if (resultStatus === 3) {
       win = winStatus;
     } else if (numberOfFulled === 9) {
       win = drawStatus;
