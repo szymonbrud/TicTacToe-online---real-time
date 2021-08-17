@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import TopBar from 'components/TopBar';
@@ -10,14 +10,23 @@ import useHooks from './useHooks';
 const LoginPage = () => {
   const { id } = useParams();
 
-  const { goToGame, inputRef } = useHooks(id);
+  const { goToGame, inputRef, isBackendReady } = useHooks(id);
 
   return (
     <MainWrapper>
-      <TopBar />
-      <Title>TIC TAC TOE</Title>
-      <UserNameInput placeholder="nickname" ref={inputRef} />
-      <Button onClick={goToGame}>{id ? 'Join' : 'Create room'}</Button>
+      {isBackendReady ? (
+        <>
+          <TopBar />
+          <Title>TIC TAC TOE</Title>
+          <UserNameInput placeholder="nickname" ref={inputRef} />
+          <Button onClick={goToGame}>{id ? 'Join' : 'Create room'}</Button>
+        </>
+      ) : (
+        <>
+          <TopBar />
+          <h3>Trwa ładowanie zaplecza aplikacji</h3>
+        </>
+      )}
     </MainWrapper>
   );
 };
