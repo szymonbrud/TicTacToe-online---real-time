@@ -43,7 +43,7 @@ const useHooks = (roomId, username) => {
     setRevenge({ showRevenge: false, users: [] });
     setWinStatus(0);
 
-    setBoard(clearBoard);
+    setBoard(new Array(9).fill(0));
     setIsGameStart(true);
   };
 
@@ -58,6 +58,7 @@ const useHooks = (roomId, username) => {
 
         const currentMove = move === 0 ? 1 : 0;
         setBoard(currentBoard);
+        // setBoard(clearBoard);
         setMove(currentMove);
       }
     } else {
@@ -138,6 +139,7 @@ const useHooks = (roomId, username) => {
 
   useEffect(() => {
     setBoard(clearBoard);
+
     socket.emit('join', { roomId, username }, res => {
       history.push('/error');
     });
