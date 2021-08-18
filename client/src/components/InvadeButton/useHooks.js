@@ -27,11 +27,10 @@ const useHooks = roomId => {
 
     navigator.clipboard
       .writeText(link)
-      .then(() => {
-        console.log('link copied');
-      })
+      .then(() => {})
       .catch(err => {
-        console.log(err);
+        // eslint-disable-next-line no-console
+        console.error(err);
       });
   };
 

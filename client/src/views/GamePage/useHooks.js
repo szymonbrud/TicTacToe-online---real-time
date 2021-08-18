@@ -13,8 +13,6 @@ if (window.location.host === 'localhost:3000') {
 
 let socket;
 
-const fieldTypeBoard = [0, 1, 2];
-const [emptyField] = fieldTypeBoard;
 const symbolType = [0, 1];
 const [, elipse] = symbolType;
 
@@ -62,6 +60,7 @@ const useHooks = (roomId, username) => {
         setMove(currentMove);
       }
     } else {
+      // eslint-disable-next-line no-undef,no-alert
       alert('To nie jest twój ruch!');
     }
   };
@@ -140,7 +139,7 @@ const useHooks = (roomId, username) => {
   useEffect(() => {
     setBoard(clearBoard);
 
-    socket.emit('join', { roomId, username }, res => {
+    socket.emit('join', { roomId, username }, () => {
       history.push('/error');
     });
 
