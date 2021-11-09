@@ -4,6 +4,11 @@ import media from 'assets/styles/media';
 export const MainWrapper = styled.div`
   background: ${({ theme }) => theme.colors.drityWhite};
   min-height: 100vh;
+  max-width: 100vw;
+  padding: 200px 0 150px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
 `;
 
 export const PlayersWrapper = styled.div`
@@ -11,6 +16,7 @@ export const PlayersWrapper = styled.div`
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 82px;
   background: white;
+  max-width: 300px;
 `;
 
 export const PlayerInsideWrapper = styled.div`
@@ -42,13 +48,10 @@ export const PlayerIcon = styled.img`
 
 export const BoardWrapper = styled.div`
   display: grid;
-  grid-template-columns: 137px 137px 137px;
-  grid-template-rows: 137px 137px 137px;
-  grid-gap: 22px 22px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  grid-template-columns: 25vw 25vw 25vw;
+  grid-template-rows: 25vw 25vw 25vw;
+  grid-gap: 2vw;
+  justify-content: center;
 
   ::before {
     ${({ isWin }) =>
@@ -77,6 +80,12 @@ export const BoardWrapper = styled.div`
     color: rgba(0, 0, 0, 0.7);
     font-size: 50px;
   }
+
+  @media (min-width: 500px) {
+    grid-template-columns: 130px 130px 130px;
+    grid-template-rows: 130px 130px 130px;
+    grid-gap: 20px;
+  }
 `;
 
 export const Field = styled.div`
@@ -94,7 +103,7 @@ export const Field = styled.div`
 `;
 
 export const BottomWrapper = styled.div`
-  position: absolute;
+  position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
@@ -199,4 +208,8 @@ export const RevengeButton = styled.button`
 
 export const FieldSymbolImage = styled.img`
   width: 50px;
+
+  @media (max-height: 800px) {
+    width: 46%;
+  }
 `;
