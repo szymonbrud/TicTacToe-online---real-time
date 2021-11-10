@@ -141,6 +141,7 @@ export const WaitForOpponentWrapper = styled.div`
 export const Text = styled.p`
   font-size: 30px;
   margin: 0 0 100px 0;
+  text-align: center;
 `;
 
 export const RevengeWrapper = styled.div`

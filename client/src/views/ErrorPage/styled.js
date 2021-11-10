@@ -14,6 +14,7 @@ export const Wrapper = styled.div`
 export const Text = styled.p`
   font-size: 25px;
   margin: 0;
+  text-align: center;
 `;
 
 export const BackButton = styled(Link)`

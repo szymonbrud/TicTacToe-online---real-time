@@ -49,7 +49,7 @@ const GamePage = () => {
     <>
       {!isGameStart && (
         <WaitForOpponentWrapper>
-          <TopBar>
+          <TopBar isWaitingForOpponentView>
             <InvadeButton />
           </TopBar>
           <Text>czekanie na przeciwnika</Text>

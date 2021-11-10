@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const TopBarWrapper = styled.header`
   display: flex;
@@ -9,6 +9,14 @@ export const TopBarWrapper = styled.header`
   position: absolute;
   top: 0;
   left: 0;
+
+  ${({ isWaitingForOpponentView }) =>
+    isWaitingForOpponentView &&
+    css`
+      @media (max-width: 550px) {
+        display: none;
+      }
+    `};
 
   @media (min-width: 550px) {
     justify-content: space-between;

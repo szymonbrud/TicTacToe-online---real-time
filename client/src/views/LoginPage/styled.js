@@ -14,6 +14,11 @@ export const Title = styled.h1`
   font-weight: 700;
   font-size: 60px;
   margin: 0;
+  text-align: center;
+
+  @media (max-width: 350px) {
+    font-size: 45px;
+  }
 `;
 
 export const UserNameInput = styled.input`
