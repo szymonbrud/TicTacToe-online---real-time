@@ -52,7 +52,8 @@ const GamePage = () => {
           <TopBar isWaitingForOpponentView>
             <InvadeButton />
           </TopBar>
-          <Text>czekanie na przeciwnika</Text>
+          <Text>Kliknij, aby skopiować link i przesłać go znajomemu, dzięki czemu będzie mógł dołączyć do rozgrywki</Text>
+          <p style={{textAlign: "center", padding: "0px 20px", position: 'relative', top: '-100px'}}>Jeśli tylko testujesz aplikację, otwórz nową kartę i wklej tam skopiowany link</p>
           <InvadeButton />
         </WaitForOpponentWrapper>
       )}

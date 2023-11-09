@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { uuid } from 'uuidv4';
+import { v4 as uuidv4 } from 'uuid';
 
 const checkBackend = callback => {
   let API;
@@ -32,7 +32,7 @@ const useHooks = id => {
 
   const goToGame = () => {
     if (inputRef.current.value.length >= 1) {
-      const path = `/game/${id || uuid()}/${inputRef.current.value}`;
+      const path = `/game/${id || uuidv4()}/${inputRef.current.value}`;
       history.push(path);
     }
   };

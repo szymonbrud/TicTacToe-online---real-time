@@ -14,10 +14,10 @@ const InvadeButton = () => {
   return (
     <Button onClick={buttonAction} ref={buttonRef}>
       {isButtonClicked ? (
-        'zapisano link!'
+        'Zapisano link!'
       ) : (
         <>
-          zaproś
+          Zaproś
           <Icon src={copyIcon} alt="copy" />
         </>
       )}
