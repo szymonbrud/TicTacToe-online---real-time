@@ -8,7 +8,7 @@ const checkBackend = callback => {
   if (window.location.host === 'localhost:3000') {
     API = 'http://localhost:5000';
   } else {
-    API = 'https://tictactoeoriginbackend.herokuapp.com';
+    API = 'https://tictactoe-gbh4.onrender.com';
   }
 
   fetch(`${API}/isReady`)

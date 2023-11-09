@@ -9,7 +9,8 @@
   },
   "globals": {
     "navigator": true,
-    "window": true
+    "window": true,
+    "fetch": true
   },
   "settings": {
     "import/resolver": {
